@@ -35,7 +35,7 @@ var rootCmd = &cobra.Command{
   • Viper config file and environment variable binding
   • Multiple output formats (table, json, yaml)
   • Shell completion (myapp completion bash|zsh|fish|powershell)`,
-	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+	PersistentPreRun: func(cmd *cobra.Command, _ []string) {
 		printer = cli.NewPrinter(cli.ParseFormat(output), noColor)
 		printer.Out = cmd.OutOrStdout()
 	},
@@ -66,7 +66,7 @@ var greetCmd = &cobra.Command{
 	Short: "Print a greeting",
 	Long:  "Greet demonstrates local flags and argument validation.",
 	Args:  cobra.NoArgs,
-	RunE: func(cmd *cobra.Command, args []string) error {
+	RunE: func(_ *cobra.Command, _ []string) error {
 		for i := 0; i < greetCount; i++ {
 			printer.Success(fmt.Sprintf("%s, %s!", greetGreeting, greetName))
 		}
@@ -88,7 +88,7 @@ var configCmd = &cobra.Command{
 	Short: "Show resolved configuration",
 	Long:  "Loads config from file, env vars, and defaults via Viper, then displays it.",
 	Args:  cobra.NoArgs,
-	RunE: func(cmd *cobra.Command, args []string) error {
+	RunE: func(_ *cobra.Command, _ []string) error {
 		cfg, err := cli.LoadConfig(cfgFile, "MYAPP")
 		if err != nil {
 			return fmt.Errorf("loading config: %w", err)
@@ -109,7 +109,7 @@ var listCmd = &cobra.Command{
 	Short: "List sample items with optional filter",
 	Long:  "Demonstrates table output, JSON/YAML modes, and positional arg validation.",
 	Args:  cobra.MaximumNArgs(1),
-	RunE: func(cmd *cobra.Command, args []string) error {
+	RunE: func(_ *cobra.Command, args []string) error {
 		type item struct {
 			Name   string `json:"name" yaml:"name"`
 			Status string `json:"status" yaml:"status"`

@@ -81,7 +81,7 @@ func (m *Migrator) applied(ctx context.Context) (map[int]bool, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer rows.Close() //nolint:errcheck // best-effort close
 	out := make(map[int]bool)
 	for rows.Next() {
 		var v int

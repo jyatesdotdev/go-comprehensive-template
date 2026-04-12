@@ -79,7 +79,7 @@ func InTx(ctx context.Context, db *sql.DB, opts *sql.TxOptions, fn func(*sql.Tx)
 			_ = tx.Rollback()
 		}
 	}()
-	if err = fn(tx); err != nil {
+	if err = fn(tx); err != nil { //nolint:gocritic // named return used in defer for rollback
 		return err
 	}
 	return tx.Commit()

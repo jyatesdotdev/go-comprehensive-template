@@ -30,12 +30,9 @@ func MonteCarlo(ctx context.Context, n, numWorkers int, trialFn func() float64) 
 	var wg sync.WaitGroup
 	work := make(chan struct{}, numWorkers)
 
-	for i := range n {
-		_ = i
-		select {
-		case <-ctx.Done():
+	for range n {
+		if ctx.Err() != nil {
 			break
-		default:
 		}
 		wg.Add(1)
 		work <- struct{}{}

@@ -26,12 +26,13 @@ func TestWorkerPool(t *testing.T) {
 }
 
 func TestWorkerPool_ContextCancel(t *testing.T) {
+	t.Helper()
 	ctx, cancel := context.WithCancel(context.Background())
 	jobs := make(chan int)
 	results := WorkerPool(ctx, 2, jobs, func(_ context.Context, n int) int { return n })
 	cancel()
 	// Results channel should close after cancellation.
-	for range results {
+	for range results { //nolint:revive // drain channel
 	}
 }
 

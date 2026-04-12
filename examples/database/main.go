@@ -22,6 +22,9 @@ type User struct {
 	Email string
 }
 
+// scanUser maps a database row to a User (used with Repository[User]).
+var _ = scanUser
+
 func scanUser(s db.Scanner) (User, error) {
 	var u User
 	err := s.Scan(&u.ID, &u.Name, &u.Email)

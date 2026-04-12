@@ -6,6 +6,9 @@ import (
 	"fmt"
 	"strings"
 
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
+
 	"github.com/example/go-template/internal/pipeline"
 )
 
@@ -39,7 +42,7 @@ func etlDemo(ctx context.Context) {
 	// Transform: filter invalid, normalize
 	valid := pipeline.Filter(func(r Record) bool { return r.Name != "" })(ctx, raw)
 	normalized := pipeline.Map(func(r Record) Record {
-		return Record{Name: strings.Title(r.Name), Email: strings.ToLower(r.Email)}
+		return Record{Name: cases.Title(language.Und).String(r.Name), Email: strings.ToLower(r.Email)}
 	})(ctx, valid)
 
 	// Load: consume results
@@ -102,9 +105,7 @@ func sum(nums []int) int {
 // flatMapDemo splits lines into words using FlatMap.
 func flatMapDemo(ctx context.Context) {
 	lines := pipeline.Generator(ctx, "hello world", "go is great")
-	words := pipeline.FlatMap(func(line string) []string {
-		return strings.Fields(line)
-	})(ctx, lines)
+	words := pipeline.FlatMap(strings.Fields)(ctx, lines)
 	upper := pipeline.Map(strings.ToUpper)(ctx, words)
 
 	for w := range upper {

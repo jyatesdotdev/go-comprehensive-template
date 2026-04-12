@@ -76,7 +76,7 @@ func BenchmarkMapFilter(b *testing.B) {
 		src := Generator(ctx, items...)
 		doubled := Map(func(n int) int { return n * 2 })(ctx, src)
 		evens := Filter(func(n int) bool { return n%2 == 0 })(ctx, doubled)
-		for range evens {
+		for range evens { //nolint:revive // drain channel
 		}
 	}
 }

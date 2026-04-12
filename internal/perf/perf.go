@@ -62,7 +62,7 @@ func CollectWithPrealloc[T any](src []T, fn func(T) T) []T {
 
 // CollectNaive builds a result slice without pre-allocation (for benchmarking comparison).
 func CollectNaive[T any](src []T, fn func(T) T) []T {
-	var out []T
+	var out []T //nolint:prealloc // intentionally naive for benchmarking comparison
 	for _, v := range src {
 		out = append(out, fn(v))
 	}

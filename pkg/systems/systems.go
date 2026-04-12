@@ -65,7 +65,7 @@ func ReadLines(path string, fn func(line string) error) error {
 	if err != nil {
 		return err
 	}
-	defer f.Close()
+	defer f.Close() //nolint:errcheck // best-effort close
 	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
 		if err := fn(scanner.Text()); err != nil {
@@ -99,7 +99,7 @@ func TCPServer(ctx context.Context, addr string, handler func(net.Conn)) error {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			defer conn.Close()
+			defer conn.Close() //nolint:errcheck // best-effort close
 			handler(conn)
 		}()
 	}
@@ -113,7 +113,7 @@ func TCPSend(addr string, data []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer conn.Close()
+	defer conn.Close() //nolint:errcheck // best-effort close
 	if _, err := conn.Write(data); err != nil {
 		return nil, err
 	}
@@ -158,7 +158,7 @@ func UDPSend(addr string, data []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer conn.Close()
+	defer conn.Close() //nolint:errcheck // best-effort close
 	if _, err := conn.Write(data); err != nil {
 		return nil, err
 	}

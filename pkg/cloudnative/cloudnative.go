@@ -83,7 +83,7 @@ func (h *HealthChecker) AddCheck(name string, fn CheckFunc) {
 
 // LivenessHandler returns 200 if the process is alive.
 func (h *HealthChecker) LivenessHandler() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, _ *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		_ = json.NewEncoder(w).Encode(map[string]string{"status": "alive"}) // #nosec G104 -- best-effort HTTP response write
 	}
@@ -91,7 +91,7 @@ func (h *HealthChecker) LivenessHandler() http.HandlerFunc {
 
 // ReadinessHandler returns 200 only if all registered checks pass.
 func (h *HealthChecker) ReadinessHandler() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, _ *http.Request) {
 		h.mu.RLock()
 		defer h.mu.RUnlock()
 

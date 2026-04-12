@@ -24,8 +24,8 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /healthz", health.LivenessHandler())
 	mux.HandleFunc("GET /readyz", health.ReadinessHandler())
-	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "env=%s\n", cfg.Environment)
+	mux.HandleFunc("GET /", func(w http.ResponseWriter, _ *http.Request) {
+		_, _ = fmt.Fprintf(w, "env=%s\n", cfg.Environment)
 	})
 
 	srv := &http.Server{

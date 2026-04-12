@@ -45,7 +45,7 @@ func (r *Repository[T]) FindAll(ctx context.Context) ([]T, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer rows.Close() //nolint:errcheck // best-effort close
 
 	var results []T
 	for rows.Next() {

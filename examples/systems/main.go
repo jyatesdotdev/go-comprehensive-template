@@ -29,7 +29,7 @@ func demoAtomicWrite() {
 	fmt.Println("\n=== Atomic File Write ===")
 	path := filepath.Join(os.TempDir(), "atomic-demo.txt")
 	data := []byte("written atomically — no partial reads possible\n")
-	if err := systems.AtomicWrite(path, data, 0644); err != nil {
+	if err := systems.AtomicWrite(path, data, 0o644); err != nil {
 		fmt.Printf("  error: %v\n", err)
 		return
 	}
@@ -41,7 +41,7 @@ func demoAtomicWrite() {
 func demoReadLines() {
 	fmt.Println("=== Streaming Line Reader ===")
 	path := filepath.Join(os.TempDir(), "lines-demo.txt")
-	_ = os.WriteFile(path, []byte("line 1\nline 2\nline 3\n"), 0600) // #nosec G104 -- demo code
+	_ = os.WriteFile(path, []byte("line 1\nline 2\nline 3\n"), 0o600) // #nosec G104 -- demo code
 	defer func() { _ = os.Remove(path) }()                          // #nosec G104 -- demo cleanup
 	_ = systems.ReadLines(path, func(line string) error {            // #nosec G104 -- demo code
 		fmt.Printf("  > %s\n", line)
@@ -69,7 +69,7 @@ func demoTCPEcho() {
 				return
 			}
 			go func() {
-				defer conn.Close()
+				defer conn.Close() //nolint:errcheck // best-effort close
 				_, _ = io.Copy(conn, conn) // #nosec G104 -- echo server demo
 			}()
 		}
@@ -100,7 +100,7 @@ func demoUDPEcho() {
 	}
 	addr := pc.LocalAddr().String()
 	go func() {
-		defer pc.Close()
+		defer pc.Close() //nolint:errcheck // best-effort close
 		buf := make([]byte, 1024)
 		for {
 			n, remote, err := pc.ReadFrom(buf)

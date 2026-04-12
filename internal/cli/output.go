@@ -94,7 +94,7 @@ func (p *Printer) printJSON(data any) error {
 
 func (p *Printer) printYAML(data any) error {
 	enc := yaml.NewEncoder(p.Out)
-	defer enc.Close()
+	defer enc.Close() //nolint:errcheck // best-effort close
 	return enc.Encode(data)
 }
 
@@ -106,35 +106,35 @@ func (p *Printer) printTable(rows [][]string) error {
 	for i, row := range rows {
 		for j, col := range row {
 			if j > 0 {
-				fmt.Fprint(w, "\t")
+				_, _ = fmt.Fprint(w, "\t")
 			}
 			if i == 0 {
-				fmt.Fprint(w, Colorize(Bold, col, p.NoColor))
+				_, _ = fmt.Fprint(w, Colorize(Bold, col, p.NoColor))
 			} else {
-				fmt.Fprint(w, col)
+				_, _ = fmt.Fprint(w, col)
 			}
 		}
-		fmt.Fprintln(w)
+		_, _ = fmt.Fprintln(w)
 	}
 	return w.Flush()
 }
 
 // Success prints a green success message.
 func (p *Printer) Success(msg string) {
-	fmt.Fprintln(p.Out, Colorize(Green, "✓ "+msg, p.NoColor))
+	_, _ = fmt.Fprintln(p.Out, Colorize(Green, "✓ "+msg, p.NoColor))
 }
 
 // Error prints a red error message.
 func (p *Printer) Error(msg string) {
-	fmt.Fprintln(p.Out, Colorize(Red, "✗ "+msg, p.NoColor))
+	_, _ = fmt.Fprintln(p.Out, Colorize(Red, "✗ "+msg, p.NoColor))
 }
 
 // Info prints a blue info message.
 func (p *Printer) Info(msg string) {
-	fmt.Fprintln(p.Out, Colorize(Blue, "ℹ "+msg, p.NoColor))
+	_, _ = fmt.Fprintln(p.Out, Colorize(Blue, "ℹ "+msg, p.NoColor))
 }
 
 // Warn prints a yellow warning message.
 func (p *Printer) Warn(msg string) {
-	fmt.Fprintln(p.Out, Colorize(Yellow, "⚠ "+msg, p.NoColor))
+	_, _ = fmt.Fprintln(p.Out, Colorize(Yellow, "⚠ "+msg, p.NoColor))
 }

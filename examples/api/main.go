@@ -57,7 +57,7 @@ func main() {
 	printResp("GET  /items/1", resp)
 
 	// Delete
-	req, _ := http.NewRequest(http.MethodDelete, base+"/items/1", nil)
+	req, _ := http.NewRequest(http.MethodDelete, base+"/items/1", http.NoBody)
 	resp, _ = http.DefaultClient.Do(req)
 	printResp("DEL  /items/1", resp)
 
@@ -70,7 +70,7 @@ func main() {
 }
 
 func printResp(label string, resp *http.Response) {
-	defer resp.Body.Close()
+	defer resp.Body.Close() //nolint:errcheck // best-effort close
 	b, _ := io.ReadAll(resp.Body)
 	fmt.Printf("%-18s %d %s", label, resp.StatusCode, b)
 }

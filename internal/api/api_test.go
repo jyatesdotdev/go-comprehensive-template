@@ -42,7 +42,7 @@ func TestItemHandler_CRUD(t *testing.T) {
 
 // TestJSON verifies that the JSON helper writes a valid response envelope.
 func TestJSON(t *testing.T) {
-	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	handler := http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		JSON(w, http.StatusOK, map[string]string{"key": "val"})
 	})
 	res := testutil.DoRequest(t, handler, "GET", "/", "")
@@ -53,7 +53,7 @@ func TestJSON(t *testing.T) {
 }
 
 func contains(s, substr string) bool {
-	return len(s) >= len(substr) && (s == substr || len(substr) == 0 || findSubstr(s, substr))
+	return len(s) >= len(substr) && (s == substr || substr == "" || findSubstr(s, substr))
 }
 
 func findSubstr(s, sub string) bool {

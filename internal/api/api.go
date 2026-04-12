@@ -29,7 +29,7 @@ func Error(w http.ResponseWriter, status int, msg string) {
 
 // Decode reads JSON from the request body into v.
 func Decode(r *http.Request, v any) error {
-	defer r.Body.Close()
+	defer r.Body.Close() //nolint:errcheck // best-effort close
 	return json.NewDecoder(r.Body).Decode(v)
 }
 
@@ -54,7 +54,7 @@ func NewStore() *Store {
 // Routes: GET /items, GET /items/{id}, POST /items, DELETE /items/{id}
 func ItemHandler(s *Store) http.Handler {
 	mux := http.NewServeMux()
-	mux.HandleFunc("GET /items", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("GET /items", func(w http.ResponseWriter, _ *http.Request) {
 		s.mu.RLock()
 		defer s.mu.RUnlock()
 		items := make([]Item, 0, len(s.items))
