@@ -11,7 +11,7 @@ func TestMapFilter(t *testing.T) {
 	doubled := Map(func(n int) int { return n * 2 })(ctx, src)
 	evens := Filter(func(n int) bool { return n > 4 })(ctx, doubled)
 
-	var got []int
+	got := make([]int, 0, 5)
 	for v := range evens {
 		got = append(got, v)
 	}
@@ -39,7 +39,7 @@ func TestBatch(t *testing.T) {
 	src := Generator(ctx, 1, 2, 3, 4, 5)
 	batches := Batch[int](2)(ctx, src)
 
-	var sizes []int
+	sizes := make([]int, 0, 3)
 	for b := range batches {
 		sizes = append(sizes, len(b))
 	}
