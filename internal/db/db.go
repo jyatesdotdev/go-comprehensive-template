@@ -50,7 +50,7 @@ func Open(cfg Config) (*sql.DB, error) {
 	db.SetConnMaxIdleTime(cfg.ConnMaxIdleTime)
 
 	if err := db.Ping(); err != nil {
-		db.Close()
+		_ = db.Close() // #nosec G104 -- best-effort cleanup on ping failure
 		return nil, fmt.Errorf("db ping: %w", err)
 	}
 	return db, nil

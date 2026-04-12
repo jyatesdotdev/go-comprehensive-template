@@ -33,17 +33,17 @@ func demoAtomicWrite() {
 		fmt.Printf("  error: %v\n", err)
 		return
 	}
-	content, _ := os.ReadFile(path)
+	content, _ := os.ReadFile(path) // #nosec G104 -- demo code
 	fmt.Printf("  wrote and read back: %s", content)
-	os.Remove(path)
+	_ = os.Remove(path) // #nosec G104 -- demo cleanup
 }
 
 func demoReadLines() {
 	fmt.Println("=== Streaming Line Reader ===")
 	path := filepath.Join(os.TempDir(), "lines-demo.txt")
-	os.WriteFile(path, []byte("line 1\nline 2\nline 3\n"), 0644)
-	defer os.Remove(path)
-	systems.ReadLines(path, func(line string) error {
+	_ = os.WriteFile(path, []byte("line 1\nline 2\nline 3\n"), 0644) // #nosec G104 -- demo code
+	defer func() { _ = os.Remove(path) }()                          // #nosec G104 -- demo cleanup
+	_ = systems.ReadLines(path, func(line string) error {            // #nosec G104 -- demo code
 		fmt.Printf("  > %s\n", line)
 		return nil
 	})
@@ -62,7 +62,7 @@ func demoTCPEcho() {
 			return
 		}
 		ready <- ln.Addr().String()
-		go func() { <-ctx.Done(); ln.Close() }()
+		go func() { <-ctx.Done(); _ = ln.Close() }() // #nosec G104 -- shutdown signal
 		for {
 			conn, err := ln.Accept()
 			if err != nil {
@@ -70,7 +70,7 @@ func demoTCPEcho() {
 			}
 			go func() {
 				defer conn.Close()
-				io.Copy(conn, conn) // echo
+				_, _ = io.Copy(conn, conn) // #nosec G104 -- echo server demo
 			}()
 		}
 	}()
@@ -107,10 +107,10 @@ func demoUDPEcho() {
 			if err != nil {
 				return
 			}
-			pc.WriteTo(buf[:n], remote)
+			_, _ = pc.WriteTo(buf[:n], remote) // #nosec G104 -- echo server demo
 		}
 	}()
-	go func() { <-ctx.Done(); pc.Close() }()
+	go func() { <-ctx.Done(); _ = pc.Close() }() // #nosec G104 -- shutdown signal
 
 	resp, err := systems.UDPSend(addr, []byte("hello UDP"))
 	if err != nil {

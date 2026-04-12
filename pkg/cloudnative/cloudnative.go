@@ -85,7 +85,7 @@ func (h *HealthChecker) AddCheck(name string, fn CheckFunc) {
 func (h *HealthChecker) LivenessHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]string{"status": "alive"})
+		_ = json.NewEncoder(w).Encode(map[string]string{"status": "alive"}) // #nosec G104 -- best-effort HTTP response write
 	}
 }
 
@@ -110,7 +110,7 @@ func (h *HealthChecker) ReadinessHandler() http.HandlerFunc {
 		if !healthy {
 			w.WriteHeader(http.StatusServiceUnavailable)
 		}
-		json.NewEncoder(w).Encode(map[string]any{"ready": healthy, "checks": results})
+		_ = json.NewEncoder(w).Encode(map[string]any{"ready": healthy, "checks": results}) // #nosec G104 -- best-effort HTTP response write
 	}
 }
 

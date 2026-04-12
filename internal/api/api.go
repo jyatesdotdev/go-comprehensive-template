@@ -17,14 +17,14 @@ type Response struct {
 func JSON(w http.ResponseWriter, status int, data any) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
-	json.NewEncoder(w).Encode(Response{Data: data})
+	_ = json.NewEncoder(w).Encode(Response{Data: data}) // #nosec G104 -- best-effort HTTP response write
 }
 
 // Error writes a JSON error response.
 func Error(w http.ResponseWriter, status int, msg string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
-	json.NewEncoder(w).Encode(Response{Error: msg})
+	_ = json.NewEncoder(w).Encode(Response{Error: msg}) // #nosec G104 -- best-effort HTTP response write
 }
 
 // Decode reads JSON from the request body into v.

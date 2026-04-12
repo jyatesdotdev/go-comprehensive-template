@@ -52,6 +52,6 @@ func main() {
 	logger.Info("shutting down")
 	shutCtx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
-	srv.Shutdown(shutCtx)
+	_ = srv.Shutdown(shutCtx) // #nosec G104 -- best-effort graceful shutdown
 	logger.Info("stopped")
 }

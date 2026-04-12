@@ -38,19 +38,19 @@ func AtomicWrite(path string, data []byte, perm os.FileMode) error {
 	tmpName := tmp.Name()
 	defer func() {
 		if err != nil {
-			os.Remove(tmpName)
+			_ = os.Remove(tmpName) // #nosec G104 -- best-effort cleanup of temp file
 		}
 	}()
 	if _, err = tmp.Write(data); err != nil {
-		tmp.Close()
+		_ = tmp.Close() // #nosec G104 -- closing before returning write error
 		return fmt.Errorf("write: %w", err)
 	}
 	if err = tmp.Chmod(perm); err != nil {
-		tmp.Close()
+		_ = tmp.Close() // #nosec G104 -- closing before returning chmod error
 		return fmt.Errorf("chmod: %w", err)
 	}
 	if err = tmp.Sync(); err != nil {
-		tmp.Close()
+		_ = tmp.Close() // #nosec G104 -- closing before returning sync error
 		return fmt.Errorf("sync: %w", err)
 	}
 	if err = tmp.Close(); err != nil {
@@ -86,7 +86,7 @@ func TCPServer(ctx context.Context, addr string, handler func(net.Conn)) error {
 	var wg sync.WaitGroup
 	go func() {
 		<-ctx.Done()
-		ln.Close()
+		_ = ln.Close() // #nosec G104 -- best-effort close on context cancellation
 	}()
 	for {
 		conn, err := ln.Accept()
@@ -117,7 +117,9 @@ func TCPSend(addr string, data []byte) ([]byte, error) {
 	if _, err := conn.Write(data); err != nil {
 		return nil, err
 	}
-	conn.(*net.TCPConn).CloseWrite()
+	if err := conn.(*net.TCPConn).CloseWrite(); err != nil {
+		return nil, fmt.Errorf("close write: %w", err)
+	}
 	return io.ReadAll(conn)
 }
 
@@ -133,7 +135,7 @@ func UDPServer(ctx context.Context, addr string, handler func(data []byte, from 
 	}
 	go func() {
 		<-ctx.Done()
-		conn.Close()
+		_ = conn.Close() // #nosec G104 -- best-effort close on context cancellation
 	}()
 	buf := make([]byte, 65535)
 	for {
