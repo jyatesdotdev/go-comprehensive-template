@@ -36,7 +36,7 @@ func workerPoolExample(ctx context.Context) {
 	}()
 
 	results := concurrency.WorkerPool(ctx, 3, jobs, func(_ context.Context, n int) int {
-		time.Sleep(time.Duration(rand.Intn(50)) * time.Millisecond)
+		time.Sleep(time.Duration(rand.Intn(50)) * time.Millisecond) // #nosec G404 -- non-cryptographic jitter for demo
 		return n * n
 	})
 

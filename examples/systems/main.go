@@ -33,7 +33,7 @@ func demoAtomicWrite() {
 		fmt.Printf("  error: %v\n", err)
 		return
 	}
-	content, _ := os.ReadFile(path) // #nosec G104 -- demo code
+	content, _ := os.ReadFile(path) // #nosec G104,G304 -- demo code
 	fmt.Printf("  wrote and read back: %s", content)
 	_ = os.Remove(path) // #nosec G104 -- demo cleanup
 }
@@ -41,7 +41,7 @@ func demoAtomicWrite() {
 func demoReadLines() {
 	fmt.Println("=== Streaming Line Reader ===")
 	path := filepath.Join(os.TempDir(), "lines-demo.txt")
-	_ = os.WriteFile(path, []byte("line 1\nline 2\nline 3\n"), 0644) // #nosec G104 -- demo code
+	_ = os.WriteFile(path, []byte("line 1\nline 2\nline 3\n"), 0600) // #nosec G104 -- demo code
 	defer func() { _ = os.Remove(path) }()                          // #nosec G104 -- demo cleanup
 	_ = systems.ReadLines(path, func(line string) error {            // #nosec G104 -- demo code
 		fmt.Printf("  > %s\n", line)

@@ -48,7 +48,7 @@ func init() {
 	rootCmd.PersistentFlags().BoolVar(&noColor, "no-color", false, "disable colored output")
 
 	// Bind persistent flags to Viper so config file/env can set them too.
-	viper.BindPFlag("output", rootCmd.PersistentFlags().Lookup("output"))
+	_ = viper.BindPFlag("output", rootCmd.PersistentFlags().Lookup("output")) // #nosec G104 -- bind failure is non-fatal
 
 	rootCmd.AddCommand(greetCmd, configCmd, listCmd)
 }

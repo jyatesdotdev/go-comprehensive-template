@@ -61,7 +61,7 @@ func AtomicWrite(path string, data []byte, perm os.FileMode) error {
 
 // ReadLines streams lines from a file, calling fn for each. Stops if fn returns an error.
 func ReadLines(path string, fn func(line string) error) error {
-	f, err := os.Open(path)
+	f, err := os.Open(path) // #nosec G304 -- path is caller-controlled by design
 	if err != nil {
 		return err
 	}

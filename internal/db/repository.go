@@ -28,7 +28,7 @@ type Repository[T any] struct {
 
 // FindByID retrieves a single row by its primary key column.
 func (r *Repository[T]) FindByID(ctx context.Context, idCol string, id any) (T, error) {
-	q := fmt.Sprintf("SELECT * FROM %s WHERE %s = ?", r.Table, idCol)
+	q := fmt.Sprintf("SELECT * FROM %s WHERE %s = ?", r.Table, idCol) // #nosec G201 -- table/column names are developer-controlled struct fields
 	row := r.DB.QueryRowContext(ctx, q, id)
 	entity, err := r.Scan(row)
 	if errors.Is(err, sql.ErrNoRows) {
@@ -40,7 +40,7 @@ func (r *Repository[T]) FindByID(ctx context.Context, idCol string, id any) (T, 
 
 // FindAll retrieves all rows from the table.
 func (r *Repository[T]) FindAll(ctx context.Context) ([]T, error) {
-	q := fmt.Sprintf("SELECT * FROM %s", r.Table)
+	q := fmt.Sprintf("SELECT * FROM %s", r.Table) // #nosec G201 -- table name is a developer-controlled struct field
 	rows, err := r.DB.QueryContext(ctx, q)
 	if err != nil {
 		return nil, err

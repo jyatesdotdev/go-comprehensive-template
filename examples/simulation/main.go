@@ -18,7 +18,7 @@ func main() {
 	// 1. Monte Carlo estimation of Pi
 	fmt.Println("=== Monte Carlo Pi Estimation ===")
 	pi := simulation.MonteCarlo(ctx, 1_000_000, 8, func() float64 {
-		x, y := rand.Float64(), rand.Float64()
+		x, y := rand.Float64(), rand.Float64() // #nosec G404 -- math/rand is appropriate for Monte Carlo simulation
 		if x*x+y*y <= 1 {
 			return 4.0
 		}
@@ -31,7 +31,7 @@ func main() {
 	results := simulation.RunConcurrent(ctx, map[string]func(context.Context) (float64, error){
 		"pi_monte_carlo": func(ctx context.Context) (float64, error) {
 			v := simulation.MonteCarlo(ctx, 500_000, 4, func() float64 {
-				x, y := rand.Float64(), rand.Float64()
+				x, y := rand.Float64(), rand.Float64() // #nosec G404 -- math/rand is appropriate for Monte Carlo simulation
 				if x*x+y*y <= 1 {
 					return 4.0
 				}

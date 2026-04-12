@@ -6,7 +6,7 @@ import (
 	"bytes"
 	"fmt"
 	"net/http"
-	_ "net/http/pprof" // registers /debug/pprof/* handlers
+	_ "net/http/pprof" // #nosec G108 -- intentional pprof exposure for demo/profiling
 	"runtime"
 	"time"
 
@@ -34,7 +34,7 @@ func pprofDemo() {
 	// In production, expose pprof on a separate internal port.
 	go func() {
 		fmt.Println("  pprof available at http://localhost:6060/debug/pprof/")
-		_ = http.ListenAndServe("localhost:6060", nil)
+		_ = http.ListenAndServe("localhost:6060", nil) // #nosec G114 -- demo pprof server, timeouts not needed
 	}()
 	time.Sleep(10 * time.Millisecond) // let server start
 	fmt.Println("  Endpoints: /debug/pprof/{heap,goroutine,profile,trace}")

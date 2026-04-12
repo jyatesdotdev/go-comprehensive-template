@@ -25,7 +25,7 @@ func main() {
 		api.JSON(w, http.StatusOK, map[string]string{"status": "ok"})
 	})
 
-	srv := &http.Server{Addr: ":9090", Handler: mux}
+	srv := &http.Server{Addr: ":9090", Handler: mux, ReadHeaderTimeout: 10 * time.Second}
 	go func() {
 		log.Println("server listening on :9090")
 		if err := srv.ListenAndServe(); err != http.ErrServerClosed {
@@ -65,7 +65,7 @@ func main() {
 	resp, _ = http.Get(base + "/items/1")
 	printResp("GET  /items/1", resp)
 
-	srv.Close()
+	_ = srv.Close() // #nosec G104 -- demo shutdown
 	fmt.Println("\ndone")
 }
 

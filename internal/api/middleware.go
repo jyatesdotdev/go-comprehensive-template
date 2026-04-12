@@ -23,7 +23,7 @@ func Logging(next http.Handler) http.Handler {
 		start := time.Now()
 		sw := &statusWriter{ResponseWriter: w, status: http.StatusOK}
 		next.ServeHTTP(sw, r)
-		log.Printf("%s %s %d %s", r.Method, r.URL.Path, sw.status, time.Since(start))
+		log.Printf("%s %s %d %s", r.Method, r.URL.Path, sw.status, time.Since(start)) // #nosec G706 -- request method/path logged for observability
 	})
 }
 
