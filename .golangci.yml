@@ -1,39 +1,35 @@
-version: "2"
-
 linters:
-  default: none
+  disable-all: true
   enable:
-    # Correctness
     - errcheck
     - govet
     - staticcheck
     - unused
     - ineffassign
-    # Style & quality
     - gocritic
     - revive
     - misspell
     - prealloc
-    # Security
     - gosec
     - bodyclose
     - sqlclosecheck
-  settings:
-    gocritic:
-      enabled-tags:
-        - diagnostic
-        - style
-        - performance
-    gosec:
-      severity: medium
-      confidence: medium
+
+linters-settings:
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - style
+      - performance
+  gosec:
+    severity: medium
+    confidence: medium
 
 issues:
   max-issues-per-linter: 0
   max-same-issues: 0
 
 severity:
-  default: warning
+  default-severity: warning
   rules:
     - linters:
         - gosec
