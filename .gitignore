@@ -1,0 +1,38 @@
+# Compiled binaries
+/bin/
+/dist/
+/server
+/cli
+/simulation
+/database
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test output
+*.test
+cover.out
+coverage.out
+*.prof
+cpu.pprof
+mem.pprof
+
+# Go workspace
+go.work
+go.work.sum
+
+# Vendor (uncomment if vendoring)
+# vendor/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,41 @@
+# Git
+.git/
+.github/
+
+# Build artifacts
+bin/
+dist/
+cli
+database
+simulation
+*.exe
+
+# Test output
+*.test
+cover.out
+coverage.out
+*.prof
+*.pprof
+
+# Docs & meta
+docs/
+README.md
+Makefile
+LICENSE
+.golangci.yml
+
+# Docker
+Dockerfile
+.dockerignore
+
+# IDE & OS
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Go workspace
+go.work
+go.work.sum
