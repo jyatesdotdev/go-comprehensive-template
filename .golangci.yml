@@ -1,11 +1,13 @@
+version: "2"
+
 linters:
+  default: none
   enable:
     # Correctness
     - errcheck
     - govet
     - staticcheck
     - unused
-    - gosimple
     - ineffassign
     # Style & quality
     - gocritic
@@ -16,27 +18,22 @@ linters:
     - gosec
     - bodyclose
     - sqlclosecheck
-
-linters-settings:
-  gocritic:
-    enabled-tags:
-      - diagnostic
-      - style
-      - performance
-  gosec:
-    excludes:
-      # Example: exclude specific rules if needed
-      # - G104  # unhandled errors (covered by errcheck)
-    severity: medium
-    confidence: medium
+  settings:
+    gocritic:
+      enabled-tags:
+        - diagnostic
+        - style
+        - performance
+    gosec:
+      severity: medium
+      confidence: medium
 
 issues:
-  exclude-use-default: false
   max-issues-per-linter: 0
   max-same-issues: 0
 
 severity:
-  default-severity: warning
+  default: warning
   rules:
     - linters:
         - gosec
