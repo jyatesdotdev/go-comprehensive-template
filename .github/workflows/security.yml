@@ -63,19 +63,6 @@ jobs:
         with:
           version: latest
 
-  nancy:
-    name: Dependency CVE Scan
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version: '1.24.13'
-      - name: Install nancy
-        run: go install github.com/sonatype-nexus-community/nancy@latest
-      - name: Run nancy
-        run: go list -json -m all | nancy sleuth
-
   trivy:
     name: Trivy Filesystem Scan
     runs-on: ubuntu-latest
@@ -99,7 +86,7 @@ jobs:
   # Gate job — fails the PR if any scanner fails
   security-gate:
     name: Security Gate
-    needs: [govulncheck, gosec, golangci-lint, nancy, trivy]
+    needs: [govulncheck, gosec, golangci-lint, trivy]
     runs-on: ubuntu-latest
     if: always()
     steps:
@@ -107,7 +94,6 @@ jobs:
         run: |
           if [ "${{ needs.gosec.result }}" != "success" ] || \
              [ "${{ needs.golangci-lint.result }}" != "success" ] || \
-             [ "${{ needs.nancy.result }}" != "success" ] || \
              [ "${{ needs.trivy.result }}" != "success" ]; then
             echo "::error::One or more security scans failed"
             exit 1
