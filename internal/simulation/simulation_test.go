@@ -15,7 +15,7 @@ func TestMonteCarlo(t *testing.T) {
 	}
 }
 
-func TestMonteCarlo_CancelledContext(t *testing.T) {
+func TestMonteCarlo_CancelledContext(_ *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel()
 	// Should still return without hanging; value is degenerate but shouldn't panic.

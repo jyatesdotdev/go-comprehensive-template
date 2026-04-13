@@ -77,7 +77,7 @@ func TestFlatMap(t *testing.T) {
 		return out
 	})(ctx, src)
 
-	var got []string
+	got := make([]string, 0, 5)
 	for v := range flat {
 		got = append(got, v)
 	}

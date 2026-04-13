@@ -115,7 +115,7 @@ func TestOrDone(t *testing.T) {
 	close(src)
 
 	out := OrDone(ctx, src)
-	var got []int
+	got := make([]int, 0, 3)
 	for v := range out {
 		got = append(got, v)
 	}
@@ -124,12 +124,12 @@ func TestOrDone(t *testing.T) {
 	}
 }
 
-func TestOrDone_ContextCancel(t *testing.T) {
+func TestOrDone_ContextCancel(_ *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	src := make(chan int) // unbuffered, will block
 	out := OrDone(ctx, src)
 	cancel()
-	for range out { //nolint:revive
+	for range out { //nolint:revive // drain channel after cancel
 	}
 }
 
