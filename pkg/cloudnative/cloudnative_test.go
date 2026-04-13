@@ -42,7 +42,7 @@ func TestNewLogger_Levels(t *testing.T) {
 func TestHealthChecker_Liveness(t *testing.T) {
 	hc := NewHealthChecker()
 	rec := httptest.NewRecorder()
-	hc.LivenessHandler().ServeHTTP(rec, httptest.NewRequest("GET", "/livez", nil))
+	hc.LivenessHandler().ServeHTTP(rec, httptest.NewRequest("GET", "/livez", http.NoBody))
 	if rec.Code != 200 {
 		t.Fatalf("expected 200, got %d", rec.Code)
 	}
@@ -57,7 +57,7 @@ func TestHealthChecker_Readiness_AllHealthy(t *testing.T) {
 	hc := NewHealthChecker()
 	hc.AddCheck("db", func() error { return nil })
 	rec := httptest.NewRecorder()
-	hc.ReadinessHandler().ServeHTTP(rec, httptest.NewRequest("GET", "/readyz", nil))
+	hc.ReadinessHandler().ServeHTTP(rec, httptest.NewRequest("GET", "/readyz", http.NoBody))
 	if rec.Code != 200 {
 		t.Fatalf("expected 200, got %d", rec.Code)
 	}
@@ -72,7 +72,7 @@ func TestHealthChecker_Readiness_Unhealthy(t *testing.T) {
 	hc := NewHealthChecker()
 	hc.AddCheck("cache", func() error { return errors.New("down") })
 	rec := httptest.NewRecorder()
-	hc.ReadinessHandler().ServeHTTP(rec, httptest.NewRequest("GET", "/readyz", nil))
+	hc.ReadinessHandler().ServeHTTP(rec, httptest.NewRequest("GET", "/readyz", http.NoBody))
 	if rec.Code != http.StatusServiceUnavailable {
 		t.Fatalf("expected 503, got %d", rec.Code)
 	}
@@ -90,7 +90,7 @@ func TestRequestLogger(t *testing.T) {
 	})
 	handler := RequestLogger(logger, inner)
 	rec := httptest.NewRecorder()
-	handler.ServeHTTP(rec, httptest.NewRequest("GET", "/test", nil))
+	handler.ServeHTTP(rec, httptest.NewRequest("GET", "/test", http.NoBody))
 	if rec.Code != http.StatusCreated {
 		t.Fatalf("expected 201, got %d", rec.Code)
 	}

@@ -71,7 +71,7 @@ func TestInTx_Commit(t *testing.T) {
 	mock.ExpectBegin()
 	mock.ExpectCommit()
 
-	err = InTx(context.Background(), db, nil, func(tx *sql.Tx) error {
+	err = InTx(context.Background(), db, nil, func(_ *sql.Tx) error {
 		return nil
 	})
 	if err != nil {
@@ -93,7 +93,7 @@ func TestInTx_Rollback(t *testing.T) {
 	mock.ExpectRollback()
 
 	fnErr := errors.New("fail")
-	err = InTx(context.Background(), db, nil, func(tx *sql.Tx) error {
+	err = InTx(context.Background(), db, nil, func(_ *sql.Tx) error {
 		return fnErr
 	})
 	if !errors.Is(err, fnErr) {
@@ -121,7 +121,7 @@ func TestInTx_Panic(t *testing.T) {
 		}
 	}()
 
-	_ = InTx(context.Background(), db, nil, func(tx *sql.Tx) error {
+	_ = InTx(context.Background(), db, nil, func(_ *sql.Tx) error {
 		panic("boom")
 	})
 }
@@ -135,7 +135,7 @@ func TestInTx_BeginError(t *testing.T) {
 
 	mock.ExpectBegin().WillReturnError(errors.New("begin fail"))
 
-	err = InTx(context.Background(), db, nil, func(tx *sql.Tx) error {
+	err = InTx(context.Background(), db, nil, func(_ *sql.Tx) error {
 		return nil
 	})
 	if err == nil {

@@ -31,7 +31,7 @@ func TestHasError(t *testing.T) {
 }
 
 func TestDoRequest(t *testing.T) {
-	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	handler := http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		fmt.Fprint(w, "ok")
 	})

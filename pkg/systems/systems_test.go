@@ -1,6 +1,7 @@
 package systems
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"io"
@@ -31,7 +32,7 @@ func TestAtomicWrite(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if string(got) != string(data) {
+	if !bytes.Equal(got, data) {
 		t.Errorf("got %q, want %q", got, data)
 	}
 }
@@ -45,7 +46,7 @@ func TestAtomicWrite_BadDir(t *testing.T) {
 
 func TestReadLines(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "lines.txt")
-	_ = os.WriteFile(path, []byte("a\nb\nc\n"), 0o644)
+	_ = os.WriteFile(path, []byte("a\nb\nc\n"), 0o600)
 	var lines []string
 	err := ReadLines(path, func(line string) error {
 		lines = append(lines, line)
@@ -68,7 +69,7 @@ func TestReadLines_Error(t *testing.T) {
 
 func TestReadLines_CallbackError(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "lines.txt")
-	_ = os.WriteFile(path, []byte("a\nb\n"), 0o644)
+	_ = os.WriteFile(path, []byte("a\nb\n"), 0o600)
 	stop := fmt.Errorf("stop")
 	err := ReadLines(path, func(string) error { return stop })
 	if err != stop {
