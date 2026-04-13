@@ -45,7 +45,7 @@ func TestAtomicWrite_BadDir(t *testing.T) {
 
 func TestReadLines(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "lines.txt")
-	os.WriteFile(path, []byte("a\nb\nc\n"), 0o644)
+	_ = os.WriteFile(path, []byte("a\nb\nc\n"), 0o644)
 	var lines []string
 	err := ReadLines(path, func(line string) error {
 		lines = append(lines, line)
@@ -68,7 +68,7 @@ func TestReadLines_Error(t *testing.T) {
 
 func TestReadLines_CallbackError(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "lines.txt")
-	os.WriteFile(path, []byte("a\nb\n"), 0o644)
+	_ = os.WriteFile(path, []byte("a\nb\n"), 0o644)
 	stop := fmt.Errorf("stop")
 	err := ReadLines(path, func(string) error { return stop })
 	if err != stop {
@@ -91,7 +91,7 @@ func TestTCPServerAndSend(t *testing.T) {
 	go func() {
 		_ = TCPServer(ctx, addr, func(conn net.Conn) {
 			data, _ := io.ReadAll(conn)
-			conn.Write([]byte("echo:" + string(data)))
+			_, _ = conn.Write([]byte("echo:" + string(data)))
 		})
 	}()
 	time.Sleep(100 * time.Millisecond)
@@ -119,7 +119,7 @@ func TestUDPServerAndSend(t *testing.T) {
 
 	go func() {
 		_ = UDPServer(ctx, addr, func(data []byte, from *net.UDPAddr, conn *net.UDPConn) {
-			conn.WriteToUDP(append([]byte("echo:"), data...), from)
+			_, _ = conn.WriteToUDP(append([]byte("echo:"), data...), from)
 		})
 	}()
 	time.Sleep(100 * time.Millisecond)

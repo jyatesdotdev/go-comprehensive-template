@@ -147,7 +147,7 @@ func TestLoadConfigDefaults(t *testing.T) {
 	// Empty config file so defaults apply
 	dir := t.TempDir()
 	cfgFile := filepath.Join(dir, "empty.yaml")
-	if err := os.WriteFile(cfgFile, []byte(""), 0644); err != nil {
+	if err := os.WriteFile(cfgFile, []byte(""), 0o600); err != nil {
 		t.Fatal(err)
 	}
 	cfg, err := LoadConfig(cfgFile, "TESTAPP")
@@ -170,7 +170,7 @@ func TestLoadConfigFromFile(t *testing.T) {
 	dir := t.TempDir()
 	cfgFile := filepath.Join(dir, "config.yaml")
 	content := []byte("app:\n  name: testapp\n  port: 9090\ndatabase:\n  host: dbhost\n  port: 3306\nlog:\n  level: debug\n  format: json\n")
-	if err := os.WriteFile(cfgFile, content, 0644); err != nil {
+	if err := os.WriteFile(cfgFile, content, 0o600); err != nil {
 		t.Fatal(err)
 	}
 	cfg, err := LoadConfig(cfgFile, "TESTAPP")
