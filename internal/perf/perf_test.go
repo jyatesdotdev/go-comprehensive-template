@@ -5,6 +5,50 @@ import (
 	"testing"
 )
 
+func TestPool(t *testing.T) {
+	pool := NewPool(func() *bytes.Buffer { return new(bytes.Buffer) })
+	buf := pool.Get()
+	buf.WriteString("hello")
+	if buf.String() != "hello" {
+		t.Fatal("unexpected buffer content")
+	}
+	buf.Reset()
+	pool.Put(buf)
+	buf2 := pool.Get()
+	if buf2.Len() != 0 {
+		t.Fatal("expected empty buffer from pool")
+	}
+}
+
+func TestSumNoEscape(t *testing.T) {
+	if got := SumNoEscape([]int{1, 2, 3}); got != 6 {
+		t.Fatalf("got %d, want 6", got)
+	}
+}
+
+func TestSumEscapes(t *testing.T) {
+	got := SumEscapes([]int{4, 5, 6})
+	if *got != 15 {
+		t.Fatalf("got %d, want 15", *got)
+	}
+}
+
+func TestCollectWithPrealloc(t *testing.T) {
+	src := []int{1, 2, 3}
+	got := CollectWithPrealloc(src, func(n int) int { return n * 2 })
+	if len(got) != 3 || got[0] != 2 || got[1] != 4 || got[2] != 6 {
+		t.Fatalf("got %v", got)
+	}
+}
+
+func TestCollectNaive(t *testing.T) {
+	src := []int{1, 2, 3}
+	got := CollectNaive(src, func(n int) int { return n + 10 })
+	if len(got) != 3 || got[0] != 11 || got[1] != 12 || got[2] != 13 {
+		t.Fatalf("got %v", got)
+	}
+}
+
 // --- Benchmark: sync.Pool vs fresh allocation ---
 
 func BenchmarkBufferPool(b *testing.B) {
