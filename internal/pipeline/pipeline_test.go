@@ -65,6 +65,27 @@ func TestMapReduce(t *testing.T) {
 	}
 }
 
+func TestFlatMap(t *testing.T) {
+	ctx := context.Background()
+	src := Generator(ctx, "ab", "cde")
+	// Split each string into individual characters
+	flat := FlatMap(func(s string) []string {
+		out := make([]string, len(s))
+		for i, c := range s {
+			out[i] = string(c)
+		}
+		return out
+	})(ctx, src)
+
+	var got []string
+	for v := range flat {
+		got = append(got, v)
+	}
+	if len(got) != 5 {
+		t.Errorf("FlatMap got %v, want 5 items", got)
+	}
+}
+
 func BenchmarkMapFilter(b *testing.B) {
 	items := make([]int, 1000)
 	for i := range items {

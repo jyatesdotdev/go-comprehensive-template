@@ -106,6 +106,33 @@ func TestFanIn(t *testing.T) {
 	}
 }
 
+func TestOrDone(t *testing.T) {
+	ctx := context.Background()
+	src := make(chan int, 3)
+	src <- 1
+	src <- 2
+	src <- 3
+	close(src)
+
+	out := OrDone(ctx, src)
+	var got []int
+	for v := range out {
+		got = append(got, v)
+	}
+	if len(got) != 3 || got[0]+got[1]+got[2] != 6 {
+		t.Errorf("OrDone got %v, want [1 2 3]", got)
+	}
+}
+
+func TestOrDone_ContextCancel(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	src := make(chan int) // unbuffered, will block
+	out := OrDone(ctx, src)
+	cancel()
+	for range out { //nolint:revive
+	}
+}
+
 // BenchmarkSafeMap measures concurrent Set/Get throughput.
 func BenchmarkSafeMap(b *testing.B) {
 	m := NewSafeMap[int, int]()
