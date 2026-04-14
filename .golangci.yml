@@ -1,36 +1,52 @@
+version: "2"
 linters:
-  disable-all: true
+  default: none
   enable:
+    - bodyclose
     - errcheck
-    - govet
-    - staticcheck
-    - unused
-    - ineffassign
     - gocritic
-    - revive
+    - gosec
+    - govet
+    - ineffassign
     - misspell
     - prealloc
-    - gosec
-    - bodyclose
+    - revive
     - sqlclosecheck
-
-linters-settings:
-  gocritic:
-    enabled-tags:
-      - diagnostic
-      - style
-      - performance
-  gosec:
-    severity: medium
-    confidence: medium
-
+    - staticcheck
+    - unused
+  settings:
+    gocritic:
+      enabled-tags:
+        - diagnostic
+        - style
+        - performance
+    gosec:
+      severity: medium
+      confidence: medium
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
 issues:
   max-issues-per-linter: 0
   max-same-issues: 0
-
 severity:
-  default-severity: warning
+  default: warning
   rules:
     - linters:
         - gosec
       severity: error
+formatters:
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
